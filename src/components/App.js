@@ -74,7 +74,7 @@ class App extends Component {
     cart.push(item);
     console.log(item);
     this.setState({ cart, success: false });
-    this.iWantString(12345)
+    this.iWantString("i'm a string")
     Sentry.configureScope(scope => {
       scope.setExtra('cart', JSON.stringify(cart));
     });
