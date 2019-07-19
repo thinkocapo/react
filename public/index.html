@@ -36,6 +36,7 @@
         if (event.exception) {
           Sentry.showReportDialog();
         }
+        if (matchesFilter(event)) return null
         return event;
       }
     });
