@@ -5,7 +5,7 @@ import "./App.css";
 import wrenchImg from "../assets/wrench.png";
 import nailsImg from "../assets/nails.png";
 import hammerImg from "../assets/hammer.png";
-
+import { scopeTest } from '../services'
 const request = require('request');
 
 const monify = n => (n / 100).toFixed(2);
@@ -94,8 +94,8 @@ class App extends Component {
 
   checkout() {
     
-    // this.functionUndefined();
-
+    this.functionUndefined();
+    // scopeTest()
     /*
       POST request to /checkout endpoint.
         - Custom header with transactionId for transaction tracing
