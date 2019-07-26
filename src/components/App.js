@@ -94,8 +94,8 @@ class App extends Component {
 
   checkout() {
     
-    this.functionUndefined();
-    // scopeTest()
+    // this.functionUndefined();
+    scopeTest()
     /*
       POST request to /checkout endpoint.
         - Custom header with transactionId for transaction tracing
