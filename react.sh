@@ -17,11 +17,9 @@ echo 'echo in between Step 1 and Step 2'
 
 # 2 Start React in one of the window panes
 # React ( Directory1 & Command1)
-# tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \;
-# tmux send-keys -t 0 'npm run deploy' C-m \;
+tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \; tmux send-keys -t 0 'npm run deploy' C-m \;
 
 echo 'echo in between Step 2 and Step 3'
-
 
 # 3 Start The Server
 # TODO - need right run command
