@@ -15,6 +15,7 @@ SPRING='$HOME/path/to/spring'
 
 echo 'echo in between Step 1 and Step 2'
 
+# PROBLEM - this needs to run AFTER*** the port gets set, swap with step3
 # 2 Start React in one of the window panes
 # React ( Directory1 & Command1)
 tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \; tmux send-keys -t 0 'npm run deploy' C-m \;
@@ -24,7 +25,7 @@ echo 'echo in between Step 2 and Step 3'
 # 3 Start The Server
 # TODO - need right run command
 if [[ $1 == 'aspnet' ]]
-    then REACT_APP_PORT=5001 tmux send-keys -t 1 'cd ~/thinkocapo/flask' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
+    then REACT_APP_PORT=5001 tmux send-keys -t 1 'cd $FLASK' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
 fi
 
 if [[ $1 == 'express' ]]
@@ -36,7 +37,7 @@ if [[ $1 == 'flask' ]]
 fi
 
 if [[ $1 == 'laravel' ]]
-    then REACT_APP_PORT=8000 tmux send-keys -t 1 'cd ~/thinkocapo/laravel' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
+    then REACT_APP_PORT=8000 tmux send-keys -t 1 'cd ~/thinkocapo/laravel' C-m \; tmux send-keys -t 1 'make' C-m \;
 fi
 
 if [[ $1 == 'rails' ]]
