@@ -2,6 +2,9 @@
 #  Example usage:
 # ./react.sh express
 
+ASPNET='$HOME/path/to/aspnet'
+ASPNET='$HOME/path/to/express'
+
 if [[ $1 == 'aspnet' ]]
     then REACT_APP_PORT=5001 npm run deploy;
 fi
