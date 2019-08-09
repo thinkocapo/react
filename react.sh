@@ -1,7 +1,15 @@
 # `react.sh` allows you to connect the React App to any back-end `/checkout` endpoint
 #  Example usage:
 # ./react.sh express
+###############################
 
+# DEV NOTES
+# Assumes you already have a tmux session running
+
+# QUESTION
+# is there a way to 'check' what tmux sessions are open? because double-create the same session.
+
+################################
 ASPNET='$HOME/path/to/aspnet'
 EXPRESS='$HOME/path/to/express'
 FLASK='$HOME/path/to/flask'
@@ -15,17 +23,20 @@ SPRING='$HOME/path/to/spring'
 
 echo 'echo in between Step 1 and Step 2'
 
-# PROBLEM - this needs to run AFTER*** the port gets set, swap with step3
+# TODO - this needs to run AFTER*** the port gets set, swap with step3
+
 # 2 Start React in one of the window panes
-# React ( Directory1 & Command1)
-tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \; tmux send-keys -t 0 'npm run deploy' C-m \;
+# tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \; tmux send-keys -t 0 'npm run deploy' C-m \;
 
 echo 'echo in between Step 2 and Step 3'
 
 # 3 Start The Server
 # TODO - need right run command
 if [[ $1 == 'aspnet' ]]
-    then REACT_APP_PORT=5001 tmux send-keys -t 1 'cd $FLASK' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
+    then
+        echo 'i do something'
+        echo 'i do something too'
+    # then REACT_APP_PORT=5001 tmux send-keys -t 1 'cd $FLASK' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
 fi
 
 if [[ $1 == 'express' ]]
@@ -49,7 +60,11 @@ if [[ $1 == 'spring' ]]
 fi
 
 
+echo 'DONE'
 
-# TODO
+
+
+
+# OTHER
 ## make it so `react.sh react` only starts react app, no server side.
 ## make it so can only run server side, but that sounds like a separate script altogether. or could use an alias for that, easy.
