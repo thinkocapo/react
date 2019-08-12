@@ -3,10 +3,7 @@
 # ./react.sh express
 ###############################
 
-# DEV NOTES
-# Assumes you already have a tmux session running
-
-# QUESTION
+# DEV QUESTIONS
 # is there a way to 'check' what tmux sessions are open? because double-create the same session.
 
 ################################
@@ -21,22 +18,25 @@ SPRING='$HOME/path/to/spring'
 # tmux new-session -s demos \; 
 # tmux split-window -v\; 
 
-echo 'echo in between Step 1 and Step 2'
 
-# TODO - this needs to run AFTER*** the port gets set, swap with step3
-
-# 2 Start React in one of the window panes
-# tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \; tmux send-keys -t 0 'npm run deploy' C-m \;
-
-echo 'echo in between Step 2 and Step 3'
 
 # 3 Start The Server
 # TODO - need right run command
 if [[ $1 == 'aspnet' ]]
-    then
-        echo 'i do something'
-        echo 'i do something too'
-    # then REACT_APP_PORT=5001 tmux send-keys -t 1 'cd $FLASK' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
+    # ORIGINAL....
+    # REACT_APP_PORT=3001 npm run deploy;
+    then 
+        echo '11111'
+
+        # 1 TODO need to run next line in background...make a separate script? hmmm would be nice to 'make a function run in background'
+        REACT_APP_PORT=5001 tmux send-keys -t 0 'cd ~/thinkocapo/react' C-m \; tmux send-keys -t 0 'npm run deploy' C-m \;
+        
+        echo '22222'
+
+        # 2
+        tmux send-keys -t 1 'cd $FLASK' C-m \; tmux send-keys -t 1 'make deploy' C-m \;
+        
+        echo '33333'
 fi
 
 if [[ $1 == 'express' ]]
@@ -65,6 +65,4 @@ echo 'DONE'
 
 
 
-# OTHER
-## make it so `react.sh react` only starts react app, no server side.
-## make it so can only run server side, but that sounds like a separate script altogether. or could use an alias for that, easy.
+# TODO - things stuck running in the background?
