@@ -23,13 +23,13 @@
   <title>Sentry Demo</title>
 
   <!-- Import SDK -->
-  <script src="https://browser.sentry-cdn.com/5.4.1/bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://browser.sentry-cdn.com/5.13.2/bundle.min.js" crossorigin="anonymous"></script>
 
   <script>
     Sentry.init({
       dsn: 'https://0d52d5f4e8a64f5ab2edce50d88a7626@sentry.io/1428657',
       release: "%REACT_APP_RELEASE%",
-      environment: "prod",
+      environment: "%REACT_APP_ENVIRONMENT%",
       beforeSend(event) {
         if (event.exception) {
           Sentry.showReportDialog();

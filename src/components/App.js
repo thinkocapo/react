@@ -4,8 +4,11 @@ import "./App.css";
 import wrenchImg from "../assets/wrench.png";
 import nailsImg from "../assets/nails.png";
 import hammerImg from "../assets/hammer.png";
-import { testTypeIssue11, theCriticalIssue } from "../critical"
-const PORT = process.env.REACT_APP_PORT || 3001
+
+const PORT = process.env.REACT_APP_PORT || 3001;
+const BACKEND = process.env.REACT_APP_BACKEND || `http://localhost:${PORT}`;
+const IS_WORKFLOW_DEMO = process.env.REACT_APP_WORKFLOW !== "false";
+
 const request = require('request');
 
 const monify = n => (n / 100).toFixed(2);
@@ -64,7 +67,7 @@ class App extends Component {
     // Add context to error/event
     Sentry.configureScope(scope => {
       scope.setUser({ email: this.email }); // attach user/email context
-      scope.setTag("customerType", "medium-plan"); // custom-tag
+      scope.setTag("customerType", this.getPlanName()); // custom-tag
     });
 
     //Will add an XHR Sentry breadcrumb
@@ -76,11 +79,15 @@ class App extends Component {
   }
 
 
+   getPlanName() {
+     const plans = ["medium-plan", "large-plan", "small-plan", "enterprise"];
+     return plans[Math.floor(Math.random() * plans.length)];
+   }
+
   buyItem(item) {
 
     const cart = [].concat(this.state.cart);
     cart.push(item);
-    console.log(item);
     this.setState({ cart, success: false });
 
     Sentry.configureScope(scope => {
@@ -115,7 +122,15 @@ class App extends Component {
 
   checkout() {
 
-    // this.myCodeIsNotPerfect();
+    Sentry.addBreadcrumb({
+      category: 'cart',
+      message: 'User clicked on Checkout',
+      level: 'info'
+    });
+
+    if (IS_WORKFLOW_DEMO) {
+      this.myCodeIsPerfect();
+    }
 
     /*
       POST request to /checkout endpoint.
@@ -134,7 +149,7 @@ class App extends Component {
     });
     // perform request (set transctionID as header and throw error appropriately)
     request.post({
-        url: `http://localhost:${PORT}/checkout`,
+        url: `${BACKEND}/checkout`,
         json: order,
         headers: {
           "X-Session-ID": this.sessionId,
