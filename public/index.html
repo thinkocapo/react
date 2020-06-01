@@ -22,21 +22,51 @@
     -->
   <title>Sentry Demo</title>
 
-  <!-- Import SDK -->
-  <script src="https://browser.sentry-cdn.com/5.13.2/bundle.min.js" crossorigin="anonymous"></script>
+  <!-- Import SDK's -->
+
+  <!--  ORIGINAL w/out tracing -->
+  <!-- <script src="https://browser.sentry-cdn.com/5.13.2/bundle.min.js" crossorigin="anonymous"></script> -->
+
+  <!-- AM Transactions -->
+  <script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://browser.sentry-cdn.com/5.15.5/bundle.apm.min.js"></script>
 
   <script>
+    // SELF-HOSTED
+    // + adding the 's' to self-hosted and proxy REJECTS it
+    // let DSN = 'http://addca0b3de2340c38c825a133b9d1049@localhost:9000/5'
+
+    // SAAS
+    // TODO - try removing the 's' from https here...and Flask should NOT reject it???
+    // let DSN = "https://0d52d5f4e8a64f5ab2edce50d88a7626@o87286.ingest.sentry.io/1428657"
+    let DSN = "http://0d52d5f4e8a64f5ab2edce50d88a7626@o87286.ingest.sentry.io/1428657"
+
+    const KEY = DSN.split('@')[0] // .slice(0,7)
+    const PROXY = 'localhost:3001'
+
+    const MODIFIED_DSN_FORWARD = KEY + '@' + PROXY + '/2'
+    const MODIFIED_DSN_SAVE = KEY + '@' + PROXY + '/3'
+
+    // console.log("MODIFIED_DSN_SAVE", MODIFIED_DSN_SAVE)
+    console.log("MODIFIEND_DSN_FORWARD used", MODIFIED_DSN_FORWARD)
+      
     Sentry.init({
-      dsn: 'https://0d52d5f4e8a64f5ab2edce50d88a7626@sentry.io/1428657',
+        //   dsn: DSN,
+      dsn: MODIFIED_DSN_SAVE,
+    //   dsn: MODIFIED_DSN_SAVE,
       release: "%REACT_APP_RELEASE%",
       environment: "%REACT_APP_ENVIRONMENT%",
       beforeSend(event) {
-        if (event.exception) {
-          Sentry.showReportDialog();
-        }
-        // Check if there's something you'd want to ignore it by, and
         return event;
-      }
+      },
+
+      environment: 'prod',
+      integrations: [
+        new Sentry.Integrations.Tracing({
+            tracingOrigins: ['localhost', 'sentry.io', /^\//]
+        })
+      ],
+      tracesSampleRate: 1.0,
     });
   </script>
 <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">

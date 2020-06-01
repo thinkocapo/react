@@ -1,6 +1,10 @@
 # Must have `sentry-cli` installed globally
 # Following variable must be passed in
-# SENTRY_AUTH_TOKEN
+#SENTRY_AUTH_TOKEN=
+
+SENTRY_ORG_SELF_HOSTED=sentry
+SENTRY_PROJECT_SELF_HOSTED=react
+
 SENTRY_ORG=testorg-az
 SENTRY_PROJECT=will-frontend-react
 VERSION=`sentry-cli releases propose-version`
@@ -12,17 +16,18 @@ GCP_DEPLOY=gcloud run deploy $(shell whoami)
 GCP_SERVICE_NAME=react-errors
 GCP_WORKSPACE_NAME=workspace_react_errors
 
+VERSION=5.15.5
 
 build_react:
 	source $(HOME)/.nvm/nvm.sh && nvm use && npm install && npm run build
 
-setup_release: create_release associate_commits upload_sourcemaps
+setup_release: create_release upload_sourcemaps
 
 create_release:
 	sentry-cli releases -o $(SENTRY_ORG) new -p $(SENTRY_PROJECT) $(VERSION)
 
 associate_commits:
-	sentry-cli releases -o $(SENTRY_ORG) -p $(SENTRY_PROJECT) set-commits --auto $(VERSION)
+	sentry-cli --url http://localhost:9000 releases -o $(SENTRY_ORG) -p $(SENTRY_PROJECT) set-commits --auto $(VERSION)
 
 upload_sourcemaps:
 	sentry-cli releases -o $(SENTRY_ORG) -p $(SENTRY_PROJECT) files $(VERSION) \

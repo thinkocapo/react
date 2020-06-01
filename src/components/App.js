@@ -1,12 +1,14 @@
 /*global Sentry*/
 import React, { Component } from "react";
-import "./App.css";
+// import "./App.css";
 import wrenchImg from "../assets/wrench.png";
 import nailsImg from "../assets/nails.png";
 import hammerImg from "../assets/hammer.png";
 
-const PORT = process.env.REACT_APP_PORT || 3001;
-const BACKEND = process.env.REACT_APP_BACKEND || `http://localhost:${PORT}`;
+
+const PORT = process.env.REACT_APP_PORT || 3002;
+// const BACKEND = process.env.REACT_APP_BACKEND || `http://localhost:${PORT}`;
+const BACKEND = `http://localhost:${PORT}`
 const IS_WORKFLOW_DEMO = process.env.REACT_APP_WORKFLOW !== "false";
 
 const request = require('request');
@@ -120,7 +122,7 @@ class App extends Component {
       .then(json => console.log(json));
   }
 
-  checkout() {
+  async checkout() {
 
     Sentry.addBreadcrumb({
       category: 'cart',
@@ -128,8 +130,10 @@ class App extends Component {
       level: 'info'
     });
 
+    // TODO
+    // return
     if (IS_WORKFLOW_DEMO) {
-      this.myCodeIsPerfect();
+      this.badCodeToday();
     }
 
     /*
@@ -143,29 +147,48 @@ class App extends Component {
     };
 
     // generate unique transactionId and set as Sentry tag
-    const transactionId = getUniqueId();
-    Sentry.configureScope(scope => {
-      scope.setTag("transaction_id", transactionId);
-    });
-    // perform request (set transctionID as header and throw error appropriately)
-    request.post({
-        url: `${BACKEND}/checkout`,
-        json: order,
+    // const transactionId = getUniqueId();
+    // Sentry.configureScope(scope => {
+    //   scope.setTag("transaction_id", transactionId);
+    // });
+
+    Sentry.Integrations.Tracing.startIdleTransaction('checkout',
+      {op: 'successOp', transaction: 'successTransaction', sampled: true})
+
+    const response = await fetch(`${BACKEND}/checkout`, {
+        method: "POST",
         headers: {
-          "X-Session-ID": this.sessionId,
-          "X-Transaction-ID": transactionId
-        }
-      }, (error, response) => {
-        if (error) {
-          throw error;
-        }
-        if (response.statusCode === 200) {
-          this.setState({ success: true });
-        } else {
-          throw new Error(response.statusCode + " - " + (response.statusMessage || response.body));
-        }
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order)
+    }).catch((err) => { throw Error(err) });
+
+    if (!response.ok) {
+        throw new Error(response.status + " - " + (response.statusText || "INTERNAL SERVER ERROR"));
       }
-    );
+  
+    this.setState({ success: true });
+    return response;
+      
+    // perform request (set transctionID as header and throw error appropriately)
+    // request.post({
+    //     url: `${BACKEND}/checkout`,
+    //     json: order,
+    //     headers: {
+    //       "X-Session-ID": this.sessionId,
+    //       "X-Transaction-ID": transactionId
+    //     }
+    //   }, (error, response) => {
+    //     if (error) {
+    //       throw error;
+    //     }
+    //     if (response.statusCode === 200) {
+    //       this.setState({ success: true });
+    //     } else {
+    //       throw new Error(response.statusCode + " - " + (response.statusMessage || response.body));
+    //     }
+    //   }
+    // );
   }
 
   render() {
