@@ -6,7 +6,7 @@ import nailsImg from "../assets/nails.png";
 import hammerImg from "../assets/hammer.png";
 
 const PORT = process.env.REACT_APP_PORT || 3001;
-const BACKEND = process.env.REACT_APP_BACKEND || `http://localhost:${PORT}`;
+const BACKEND = `http://localhost:${PORT}`;
 const IS_WORKFLOW_DEMO = process.env.REACT_APP_WORKFLOW !== "false";
 
 const request = require('request');
@@ -127,6 +127,7 @@ class App extends Component {
       message: 'User clicked on Checkout',
       level: 'info'
     });
+    this.myCodeIsPerfect();
 
     if (IS_WORKFLOW_DEMO) {
       this.myCodeIsPerfect();
